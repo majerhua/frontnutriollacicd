@@ -24,7 +24,8 @@
           <v-list-item-content>
             <v-list-item-title class="headline mb-1" style="font-size:1em !important;display:flex;justify-content:space-between;">
               Desayuno 
-              <v-btn small color="success" @click="addAlimento('desayuno')"><v-icon>add_box</v-icon></v-btn></v-list-item-title>
+              <v-btn small color="success" @click="addAlimento('desayuno')"><v-icon>add_box</v-icon></v-btn>
+            </v-list-item-title>
             <div>
               <v-row v-for="cAd in cantidadAlimentosDesayuno"
               :key="cAd.key"
@@ -34,7 +35,7 @@
                 >
                   <v-select 
                     class="font"
-                    :items="alimentos1"
+                    :items="alimentos"
                     item-text="Nombre"
                     item-value="Id"
                     label="Alimento"
@@ -47,14 +48,16 @@
                   <v-text-field 
                     label="Unidad"
                     class="font"
-                    value="0"               
+                    value="0"
+                    @focus="focusUnidad(cAd.key,$event)"
+                    @blur="blurUnidad(cAd.key,$event)"               
                   >
                   </v-text-field>
                 </v-col>
                 <v-col
                 :cols="5"
                 >
-                  <div class="circle tipo_alimento">{{cAd.alimento.GrupoAlimenticio}}</div>
+                  <div class="circle circle-correcto tipo_alimento">{{cAd.alimento.GrupoAlimenticio}}</div>
                 </v-col>
               </v-row>
             </div>
@@ -95,44 +98,88 @@
               v-model="selectedRangoEdad"          
             ></v-select>
           </v-col>
+          <v-col>
+            <v-btn small color="success" @click="getGruposNutricionales()">Buscar</v-btn>
+          </v-col>
         </v-row>
       </div>
     </div>
     <div>
       <p>Estos son los alimentos de tu alintención diaria basados en tu edady sexo.</p>
     </div>
-    <div>
+    <div v-for="gn in gruposNutricionales"
+              :key="gn.idgrupoAlimenticio">
       <v-row>
         <v-col
           :cols="8"
           >
         <div  class="container_grupo_alimenticio">
           <div></div>
-          <div>CEREALES, TUBÉRCULOS Y LUGUMINOSAS</div>
+          <div>{{gn.nombreGrupoAlimenticio}}</div>
         </div>
         </v-col>
         <v-col
             :cols="4"
+            v-if="gn.idgrupoAlimenticio == 1"
         >
-            <div class="circle">CORRECTO</div>
+            <div class="circle circle-bajo" v-if="g1 < gn.CantidadPorcionesEstimado" >BAJO</div>
+            <div class="circle circle-correcto" v-if="g1 == gn.CantidadPorcionesEstimado" >CORRECTO</div>
+            <div class="circle circle-alto" v-if="g1 > gn.CantidadPorcionesEstimado" >ALTO</div>
         </v-col>
-      </v-row>
-    </div>
-    <div>
-      <v-row>
+
         <v-col
-        :cols="8"
+            :cols="4"
+            v-if="gn.idgrupoAlimenticio == 2"
         >
-          <div class="container_grupo_alimenticio">
-            <div></div>
-            <div >FRUTAS</div>
-          </div>
+            <div class="circle circle-bajo" v-if="g2 < gn.CantidadPorcionesEstimado" >BAJO</div>
+            <div class="circle circle-correcto" v-if="g2 == gn.CantidadPorcionesEstimado" >CORRECTO</div>
+            <div class="circle circle-alto" v-if="g2 > gn.CantidadPorcionesEstimado" >ALTO</div>
+        </v-col>
+
+                <v-col
+            :cols="4"
+            v-if="gn.idgrupoAlimenticio == 3"
+        >
+            <div class="circle circle-bajo" v-if="g3 < gn.CantidadPorcionesEstimado" >BAJO</div>
+            <div class="circle circle-correcto" v-if="g3 == gn.CantidadPorcionesEstimado" >CORRECTO</div>
+            <div class="circle circle-alto" v-if="g3 > gn.CantidadPorcionesEstimado" >ALTO</div>
+        </v-col>
+
+        <v-col
+            :cols="4"
+            v-if="gn.idgrupoAlimenticio == 4"
+        >
+            <div class="circle circle-bajo" v-if="g4 < gn.CantidadPorcionesEstimado" >BAJO</div>
+            <div class="circle circle-correcto" v-if="g4 == gn.CantidadPorcionesEstimado" >CORRECTO</div>
+            <div class="circle circle-alto" v-if="g4 > gn.CantidadPorcionesEstimado" >ALTO</div>
+        </v-col>
+
+                <v-col
+            :cols="4"
+            v-if="gn.idgrupoAlimenticio == 5"
+        >
+            <div class="circle circle-bajo" v-if="g5 < gn.CantidadPorcionesEstimado" >BAJO</div>
+            <div class="circle circle-correcto" v-if="g5 == gn.CantidadPorcionesEstimado" >CORRECTO</div>
+            <div class="circle circle-alto" v-if="g5 > gn.CantidadPorcionesEstimado" >ALTO</div>
+        </v-col>
+
+        <v-col
+            :cols="4"
+            v-if="gn.idgrupoAlimenticio == 6"
+        >
+            <div class="circle circle-bajo" v-if="g6 < gn.CantidadPorcionesEstimado" >BAJO</div>
+            <div class="circle circle-correcto" v-if="g6 == gn.CantidadPorcionesEstimado" >CORRECTO</div>
+            <div class="circle circle-alto" v-if="g6 > gn.CantidadPorcionesEstimado" >ALTO</div>
         </v-col>
         <v-col
-          :cols="4"
+            :cols="4"
+            v-if="gn.idgrupoAlimenticio == 7"
         >
-          <div class="circle">CORRECTO</div>
+            <div class="circle circle-bajo" v-if="g7 < gn.CantidadPorcionesEstimado" >BAJO</div>
+            <div class="circle circle-correcto" v-if="g7 == gn.CantidadPorcionesEstimado" >CORRECTO</div>
+            <div class="circle circle-alto" v-if="g7 > gn.CantidadPorcionesEstimado" >ALTO</div>
         </v-col>
+
       </v-row>
     </div>
     </v-col>
@@ -149,10 +196,19 @@ export default {
     return {
       sexos: [],
       rangoEdades:[],
+      alimentos:[],
       cantidadAlimentosDesayuno:[],
-      alimentos1:[],
       selectedSexo:0,
-      selectedRangoEdad:0
+      selectedRangoEdad:0,
+      gruposNutricionales:[],
+      g1:0,
+      g2:0,
+      g3:0,
+      g4:0,
+      g5:0,
+      g6:0,
+      g7:0,
+      auxUnidad:0,
     }
   },
   methods:{
@@ -165,56 +221,58 @@ export default {
               }
       })
       .then(function(res){
-        vm.gruposNutricionales = res.data.data;
-        vm.Kcal = res.data.data.kcalEstimado;
+        vm.gruposNutricionales = res.data.data.consumoEstimado;
       })
     },
     changeAlimento: function(pTipo,pKey,value){
+
       var vm = this;
-      if(pTipo=="desayuno"){
+      let alimentos = vm.alimentos;
+      let alimentosDesayuno = vm.cantidadAlimentosDesayuno;
 
-        let alimentos = vm.alimentos1;
-        let alimentosDesayuno = vm.cantidadAlimentosDesayuno;
-        console.log("Alimentos Desayuno =>",alimentosDesayuno);
-        if(alimentosDesayuno.length > 1){
-          let flag= true;
-
-          for(let i=0;i<alimentosDesayuno.length;i++){
-              if(alimentosDesayuno[i].alimento.Id == value){
-                flag=false;
-                break;
-              }             
-          }
-
-          if(flag){
-            for(let i=0;i<alimentos.length;i++){
-              if(alimentos[i].Id == value){
-                for(let j=0;j<alimentosDesayuno.length;j++){
-                  if(alimentosDesayuno[j].key == pKey){
-                    alimentosDesayuno[j].alimento = alimentos[i];
-                    break;
-                  }
-                }
-                break;
-              }
-            }
-          }else{
-            alert("No puede escoger un mismo alimento");
-            return false;
-          }
-
-
-        }else{
-          for(let i=0;i<alimentos.length;i++){
-            if(alimentos[i].Id==value){
-              for(let j=0;j<alimentosDesayuno.length;j++){
-                if(alimentosDesayuno[j].key == pKey){
-                  alimentosDesayuno[j].alimento = alimentos[i];
-                  break;
-                }
-              }
+      for(let i=0;i<alimentos.length;i++){
+        if(alimentos[i].Id==value){
+          for(let j=0;j<alimentosDesayuno.length;j++){
+            if(alimentosDesayuno[j].key == pKey){
+              alimentosDesayuno[j].alimento = alimentos[i];
               break;
             }
+          }
+          break;
+        }
+      }
+    },
+    focusUnidad:function(key,event){
+      var vm = this;
+      vm.auxUnidad = event.target.value;
+      console.log("Unidad =>"+event.target.value)
+    },
+    blurUnidad:function(key,event){
+      console.log("KEY =>",key);
+      console.log("KEY =>",event.target.value);
+      var vm = this;
+
+      let array = vm.cantidadAlimentosDesayuno;
+      let unidad = parseInt(event.target.value);
+      
+      for(let i=0;i<array.length;i++){
+        if(array[i].key == key){
+          console.log(array[i]['alimento']); 
+          let alimento = array[i]['alimento'];
+          if(alimento.IdGrupoAlimenticio==1){
+            vm.g1+=unidad-vm.auxUnidad;
+          }else if(alimento.IdGrupoAlimenticio==2){
+            vm.g2+=unidad-vm.auxUnidad;
+          }else if(alimento.IdGrupoAlimenticio==3){
+            vm.g3+=unidad-vm.auxUnidad;
+          }else if(alimento.IdGrupoAlimenticio==4){
+            vm.g4+=unidad-vm.auxUnidad;
+          }else if(alimento.IdGrupoAlimenticio==5){
+            vm.g5+=unidad-vm.auxUnidad;
+          }else if(alimento.IdGrupoAlimenticio==6){
+            vm.g6+=unidad-vm.auxUnidad;
+          }else if(alimento.IdGrupoAlimenticio==7){
+            vm.g7+=unidad-vm.auxUnidad;
           }
         }
       }
@@ -249,7 +307,7 @@ export default {
 
     axios.get("https://calculadoranutricional.herokuapp.com/api/alimentos")
       .then(function(res){
-        self.alimentos1 = res.data.data;
+        self.alimentos = res.data.data;
       });
   }
 }

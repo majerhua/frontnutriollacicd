@@ -66,7 +66,6 @@ body{
 
 .circle{
     min-height:3.5em;
-    background-color:#4caf50 !important;
     border-radius:10px;
     display:flex;
     justify-content:center;
@@ -78,6 +77,15 @@ body{
     padding:0.3em;
     min-width:3.4em;
 }
+    .circle-bajo{
+        background-color:rgba(238, 216, 36, 0.9) !important;
+    }
+    .circle-correcto{
+        background-color:#4caf50 !important;
+    }
+    .circle-alto{
+        background-color: red !important;
+    }
 
 .resultados h2{
     font-size:1.3em;
