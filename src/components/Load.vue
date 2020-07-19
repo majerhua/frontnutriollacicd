@@ -107,7 +107,7 @@ export default {
           sexo: { id: vm.selectedSexo.Id, nombre: vm.selectedSexo.Descripcion },
           edad: {
             id: vm.selectedRangoEdad.Id,
-            nombre: vm.selectedSexo.Descripcion
+            nombre: vm.selectedRangoEdad.Descripcion
           }
         };
         this.$emit("update", objSexoEdad);
