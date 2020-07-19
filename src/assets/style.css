@@ -2,9 +2,13 @@
     margin:0;
     padding:0;
     box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+
+
 }
 body{
     width: 100%;
+   
 }
 
 .container-title{
@@ -51,7 +55,6 @@ body{
     .container_grupo_alimenticio div:nth-child(1){
         min-height:2.5em;
         width:35px;
-        background-color:#4caf50 !important;
     }
 
     .container_grupo_alimenticio div:nth-child(2){
@@ -68,6 +71,7 @@ body{
     min-height:3.5em;
     border-radius:10px;
     display:flex;
+    flex-wrap: wrap;
     justify-content:center;
     align-items:center;
     text-align: center;
@@ -89,4 +93,11 @@ body{
 
 .resultados h2{
     font-size:1.3em;
+}
+
+.txtCantidad{
+    width:2.5em;
+    height:2em;
+    border-bottom:1px solid black;
+    outline: 0;
 }
