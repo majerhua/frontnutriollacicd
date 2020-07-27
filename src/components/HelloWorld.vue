@@ -46,27 +46,30 @@
                   <span style="font-size:0.9em;">Sexo</span>
                   <span
                     style="width:4em;height:2em;display:flex;align-items:center;justify-content:center;"
-                  >{{selectedSexo}}</span>
+                  >{{ selectedSexo }}</span>
                 </div>
               </v-col>
               <v-col>
                 <div style="display:flex;flex-direction:column;">
                   <span style="font-size:0.9em;">Edad</span>
-                  <span>{{selectedRangoEdad}}</span>
+                  <span>{{ selectedRangoEdad }}</span>
                 </div>
               </v-col>
             </v-row>
           </div>
         </div>
         <div>
-          <p>Estos son los requerimientos de tu alintención diaria basados en tu edady sexo.</p>
+          <p>
+            Estos son los requerimientos de tu alimentación diaria basado en tu
+            edad y sexo.
+          </p>
         </div>
         <div v-for="gn in gruposNutricionales" :key="gn.idgrupoAlimenticio">
           <v-row>
             <v-col :cols="8">
               <div class="container_grupo_alimenticio">
-                <div :style="{backgroundColor:gn.color}"></div>
-                <div>{{gn.nombreGrupoAlimenticio}}</div>
+                <div :style="{ backgroundColor: gn.color }"></div>
+                <div>{{ gn.nombreGrupoAlimenticio }}</div>
               </div>
             </v-col>
             <v-col :cols="4" v-if="gn.idgrupoAlimenticio == 1">
@@ -129,42 +132,61 @@
               </v-list-item-title>
               <div>
                 <v-row v-for="cAd in cantidadAlimentosDesayuno" :key="cAd.key">
-                  <v-col :cols="4">
+                  <v-col :cols="5">
                     <v-autocomplete
                       class="font"
                       :items="alimentos"
                       item-text="Nombre"
                       item-value="Id"
                       no-data-text="Se estan cargando los alimentos..."
-                      @change="changeAlimento('desayuno',cAd.key,$event)"
+                      @change="changeAlimento('desayuno', cAd.key, $event)"
                       label="Buscar alimento"
+                      :cbo-key="cAd.key"
                     ></v-autocomplete>
                   </v-col>
-                  <v-col :cols="3">
+                  <v-col :cols="2">
                     <div>
                       <div style="margin:0 !important;padding:3px 0 3px 0;">
-                        <span style="font-size:0.8em;">Cantidad</span>
+                        <span style="font-size:0.8em;">Porciones</span>
                       </div>
-                      <div style="margin:0 !important;">
-                        <input
-                          class="font txtCantidad"
-                          value="0"
-                          :txt-key="cAd.key"
-                          :readonly="'readonly'"
-                          @focus="focusUnidad(cAd.key,$event)"
-                          @blur="blurUnidad(cAd.key,'desayuno',$event)"
-                        />
-                        <span
-                          style="font-size:0.7em;margin-left:0.3em;"
-                        >{{cAd.alimento.MedidaCasera}}</span>
+                      <div
+                        style="margin:0 !important;display:flex;justify-content:space-around;align-items:center;"
+                      >
+                        <span>{{cAd.alimento.porciones == undefined ? 0: cAd.alimento.porciones}}</span>
+                        <div style="display:flex;flex-direction:column;">
+                          <button
+                            disabled
+                            :btn-key="cAd.key"
+                            style="background-color:rgb(135, 245, 67);color:#fff; width:15px;border-radius:3px;margin:0 0 5px 0;"
+                            @click="blurUnidad(cAd.key, 'desayuno','+')"
+                          >+</button>
+                          <button
+                            disabled
+                            :btn-key="cAd.key"
+                            style="background-color:gray;color:#fff; width:15px;border-radius:3px;"
+                            @click="blurUnidad(cAd.key, 'desayuno','-')"
+                          >-</button>
+                        </div>
                       </div>
                     </div>
                   </v-col>
-                  <v-col :cols="5">
+                  <v-col :cols="4">
                     <div
-                      :style="{backgroundColor:cAd.alimento.color}"
+                      :style="{ backgroundColor: cAd.alimento.color }"
                       class="circle tipo_alimento"
-                    >{{cAd.alimento.GrupoAlimenticio}}</div>
+                    >{{cAd.alimento.porciones == undefined ? 0: parseFloat(cAd.alimento.porciones*cAd.alimento.Cantidad).toFixed("2")}} {{ cAd.alimento.MedidaCasera }}</div>
+                  </v-col>
+                  <v-col :cols="1">
+                    <div style="height:100%;display:flex;align-items:center;" :div-key="cAd.key">
+                      <button
+                        @click="eliminar('desayuno', cAd.key)"
+                        style="width:22px;height:25px;background-color:red;color:#fff;border-radius:5px;text-align:center;"
+                      >
+                        <v-icon
+                          style="font-size:1em;color:#fff;text-align:center;margin-left:3.5px;"
+                        >delete_box</v-icon>
+                      </button>
+                    </div>
                   </v-col>
                 </v-row>
               </div>
@@ -193,35 +215,54 @@
                       item-text="Nombre"
                       item-value="Id"
                       no-data-text="Se estan cargando los alimentos..."
-                      @change="changeAlimento('almuerzo',cAd.key,$event)"
+                      @change="changeAlimento('almuerzo', cAd.key, $event)"
                       label="Buscar alimento"
+                      :cbo-key="cAd.key"
                     ></v-autocomplete>
                   </v-col>
                   <v-col :cols="2">
                     <div>
                       <div style="margin:0 !important;padding:3px 0 3px 0;">
-                        <span style="font-size:0.8em;">Cantidad</span>
+                        <span style="font-size:0.8em;">Porciones</span>
                       </div>
-                      <div style="margin:0 !important;">
-                        <input
-                          class="font txtCantidad"
-                          value="0"
-                          :txt-key="cAd.key"
-                          :readonly="'readonly'"
-                          @focus="focusUnidad(cAd.key,$event)"
-                          @blur="blurUnidad(cAd.key,'almuerzo',$event)"
-                        />
-                        <span
-                          style="font-size:0.7em;margin-left:0.3em;"
-                        >{{cAd.alimento.MedidaCasera}}</span>
+                      <div
+                        style="margin:0 !important;display:flex;justify-content:space-around;align-items:center;"
+                      >
+                        <span>{{cAd.alimento.porciones == undefined ? 0: cAd.alimento.porciones}}</span>
+                        <div style="display:flex;flex-direction:column;">
+                          <button
+                            disabled
+                            :btn-key="cAd.key"
+                            style="background-color:rgb(135, 245, 67);color:#fff; width:15px;border-radius:3px;margin:0 0 5px 0;"
+                            @click="blurUnidad(cAd.key, 'almuerzo','+')"
+                          >+</button>
+                          <button
+                            disabled
+                            :btn-key="cAd.key"
+                            style="background-color:gray;color:#fff; width:15px;border-radius:3px;"
+                            @click="blurUnidad(cAd.key, 'almuerzo','-')"
+                          >-</button>
+                        </div>
                       </div>
                     </div>
                   </v-col>
-                  <v-col :cols="5">
+                  <v-col :cols="4">
                     <div
-                      :style="{backgroundColor:cAd.alimento.color}"
+                      :style="{ backgroundColor: cAd.alimento.color }"
                       class="circle tipo_alimento"
-                    >{{cAd.alimento.GrupoAlimenticio}}</div>
+                    >{{cAd.alimento.porciones == undefined ? 0: parseFloat(cAd.alimento.porciones*cAd.alimento.Cantidad).toFixed("2")}} {{ cAd.alimento.MedidaCasera }}</div>
+                  </v-col>
+                  <v-col :cols="1">
+                    <div style="height:100%;display:flex;align-items:center;" :div-key="cAd.key">
+                      <button
+                        @click="eliminar('almuerzo', cAd.key)"
+                        style="width:22px;height:25px;background-color:red;color:#fff;border-radius:5px;text-align:center;"
+                      >
+                        <v-icon
+                          style="font-size:1em;color:#fff;text-align:center;margin-left:3.5px;"
+                        >delete_box</v-icon>
+                      </button>
+                    </div>
                   </v-col>
                 </v-row>
               </div>
@@ -250,35 +291,54 @@
                       item-text="Nombre"
                       item-value="Id"
                       no-data-text="Se estan cargando los alimentos..."
-                      @change="changeAlimento('cena',cAd.key,$event)"
+                      @change="changeAlimento('cena', cAd.key, $event)"
                       label="Buscar alimento"
+                      :cbo-key="cAd.key"
                     ></v-autocomplete>
                   </v-col>
                   <v-col :cols="2">
                     <div>
                       <div style="margin:0 !important;padding:3px 0 3px 0;">
-                        <span style="font-size:0.8em;">Cantidad</span>
+                        <span style="font-size:0.8em;">Porciones</span>
                       </div>
-                      <div style="margin:0 !important;">
-                        <input
-                          class="font txtCantidad"
-                          value="0"
-                          :txt-key="cAd.key"
-                          :readonly="'readonly'"
-                          @focus="focusUnidad(cAd.key,$event)"
-                          @blur="blurUnidad(cAd.key,'cena',$event)"
-                        />
-                        <span
-                          style="font-size:0.7em;margin-left:0.3em;"
-                        >{{cAd.alimento.MedidaCasera}}</span>
+                      <div
+                        style="margin:0 !important;display:flex;justify-content:space-around;align-items:center;"
+                      >
+                        <span>{{cAd.alimento.porciones == undefined ? 0: cAd.alimento.porciones}}</span>
+                        <div style="display:flex;flex-direction:column;">
+                          <button
+                            disabled
+                            :btn-key="cAd.key"
+                            style="background-color:rgb(135, 245, 67);color:#fff; width:15px;border-radius:3px;margin:0 0 5px 0;"
+                            @click="blurUnidad(cAd.key, 'cena','+')"
+                          >+</button>
+                          <button
+                            disabled
+                            :btn-key="cAd.key"
+                            style="background-color:gray;color:#fff; width:15px;border-radius:3px;"
+                            @click="blurUnidad(cAd.key, 'cena','-')"
+                          >-</button>
+                        </div>
                       </div>
                     </div>
                   </v-col>
-                  <v-col :cols="5">
+                  <v-col :cols="4">
                     <div
-                      :style="{backgroundColor:cAd.alimento.color}"
+                      :style="{ backgroundColor: cAd.alimento.color }"
                       class="circle tipo_alimento"
-                    >{{cAd.alimento.GrupoAlimenticio}}</div>
+                    >{{cAd.alimento.porciones == undefined ? 0: parseFloat(cAd.alimento.porciones*cAd.alimento.Cantidad).toFixed("2")}} {{ cAd.alimento.MedidaCasera }}</div>
+                  </v-col>
+                  <v-col :cols="1">
+                    <div style="height:100%;display:flex;align-items:center;" :div-key="cAd.key">
+                      <button
+                        @click="eliminar('cena', cAd.key)"
+                        style="width:22px;height:25px;background-color:red;color:#fff;border-radius:5px;text-align:center;"
+                      >
+                        <v-icon
+                          style="font-size:1em;color:#fff;text-align:center;margin-left:3.5px;"
+                        >delete_box</v-icon>
+                      </button>
+                    </div>
                   </v-col>
                 </v-row>
               </div>
@@ -317,18 +377,16 @@ export default {
       g5: 0,
       g6: 0,
       g7: 0,
-      auxUnidad: 0
+      auxUnidad: 0,
     };
   },
   components: {
-    Load
+    Load,
   },
   methods: {
     onChildUpdate(objEdadSexo) {
       let sexo = objEdadSexo.sexo.id;
       let edad = objEdadSexo.edad.id;
-
-      console.log(objEdadSexo);
 
       var vm = this;
       vm.selectedSexo = objEdadSexo.sexo.nombre;
@@ -339,28 +397,15 @@ export default {
           {
             params: {
               idSexo: sexo,
-              idRangoEdad: edad
-            }
+              idRangoEdad: edad,
+            },
           }
         )
-        .then(function(res) {
+        .then(function (res) {
           vm.gruposNutricionales = res.data.data.consumoEstimado;
         });
     },
-    // getGruposNutricionales: function () {
-    //   var vm = this;
-    //   axios.get("https://calculadoranutricional.herokuapp.com/api/consumo-estimado",{
-    //           params: {
-    //             idSexo: vm.selectedSexo,
-    //             idRangoEdad:vm.selectedRangoEdad
-    //           }
-    //   })
-    //   .then(function(res){
-    //     vm.gruposNutricionales = res.data.data.consumoEstimado;
-    //     console.log("Grupos Alimenticios => ",res.data.data.consumoEstimado);
-    //   })
-    // },
-    changeAlimento: function(pTipo, pKey, value) {
+    changeAlimento: function (pTipo, pKey, value) {
       var vm = this;
       let alimentos = vm.alimentos;
 
@@ -371,7 +416,7 @@ export default {
           if (alimentos[i].Id == value) {
             for (let j = 0; j < alimentosDesayuno.length; j++) {
               if (alimentosDesayuno[j].key == pKey) {
-                alimentosDesayuno[j].alimento = alimentos[i];
+                alimentosDesayuno[j].alimento = Object.assign({}, alimentos[i]);
                 break;
               }
             }
@@ -385,7 +430,7 @@ export default {
           if (alimentos[i].Id == value) {
             for (let j = 0; j < alimentosAlmuerzo.length; j++) {
               if (alimentosAlmuerzo[j].key == pKey) {
-                alimentosAlmuerzo[j].alimento = alimentos[i];
+                alimentosAlmuerzo[j].alimento = Object.assign({}, alimentos[i]);
                 break;
               }
             }
@@ -399,7 +444,7 @@ export default {
           if (alimentos[i].Id == value) {
             for (let j = 0; j < alimentosCena.length; j++) {
               if (alimentosCena[j].key == pKey) {
-                alimentosCena[j].alimento = alimentos[i];
+                alimentosCena[j].alimento = Object.assign({}, alimentos[i]);
                 break;
               }
             }
@@ -407,15 +452,19 @@ export default {
           }
         }
       }
+      let input = document.querySelectorAll(`button[btn-key="${pKey}"]`);
+      for (let i = 0; i < input.length; i++) {
+        input[i].removeAttribute("disabled");
+      }
 
-      let input = document.querySelector(`input[txt-key="${pKey}"]`);
-      input.removeAttribute("readonly");
+      let cbo = document.querySelector(`input[cbo-key="${pKey}"]`);
+      cbo.setAttribute("disabled", "disabled");
     },
-    focusUnidad: function(key, event) {
+    focusUnidad: function (key, event) {
       var vm = this;
       vm.auxUnidad = event.target.value;
     },
-    blurUnidad: function(key, pTipo, event) {
+    eliminar: function (pTipo, key) {
       var vm = this;
       let array = [];
 
@@ -427,31 +476,105 @@ export default {
         array = vm.cantidadAlimentosCena;
       }
 
-      let unidad = parseInt(event.target.value);
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].key == key) {
+          let alimento = Object.assign({}, array[i].alimento);
+          let porcion = alimento.porciones;
+          if (alimento.IdGrupoAlimenticio == 1) {
+            vm.g1 -= isNaN(porcion) ? 0 : porcion;
+          } else if (alimento.IdGrupoAlimenticio == 2) {
+            vm.g2 -= isNaN(porcion) ? 0 : porcion;
+          } else if (alimento.IdGrupoAlimenticio == 3) {
+            vm.g3 -= isNaN(porcion) ? 0 : porcion;
+          } else if (alimento.IdGrupoAlimenticio == 4) {
+            vm.g4 -= isNaN(porcion) ? 0 : porcion;
+          } else if (alimento.IdGrupoAlimenticio == 5) {
+            vm.g5 -= isNaN(porcion) ? 0 : porcion;
+          } else if (alimento.IdGrupoAlimenticio == 6) {
+            vm.g6 -= isNaN(porcion) ? 0 : porcion;
+          } else if (alimento.IdGrupoAlimenticio == 7) {
+            vm.g7 -= isNaN(porcion) ? 0 : porcion;
+          }
+          array.splice(i, 1);
+          break;
+        }
+      }
+      console.log("Array Desayuno=>", vm.cantidadAlimentosDesayuno);
+      console.log("Array Almuerzo=>", vm.cantidadAlimentosAlmuerzo);
+      console.log("Array Cena=>", vm.cantidadAlimentosCena);
+      console.log("Array Grupo Nutricional =>", vm.gruposNutricionales);
+      console.log("G1 =>", vm.g1);
+      console.log("G2 =>", vm.g2);
+      console.log("G3 =>", vm.g3);
+      console.log("G4 =>", vm.g4);
+      console.log("G5 =>", vm.g5);
+      console.log("G6 =>", vm.g6);
+      console.log("G7 =>", vm.g7);
+    },
+    blurUnidad: function (key, pTipo, pOperation) {
+      var vm = this;
+      let array = [];
+
+      if (pTipo == "desayuno") {
+        array = vm.cantidadAlimentosDesayuno;
+      } else if (pTipo == "almuerzo") {
+        array = vm.cantidadAlimentosAlmuerzo;
+      } else if (pTipo == "cena") {
+        array = vm.cantidadAlimentosCena;
+      }
+
+      let porcion = 1;
+
+      if (pOperation == "-") porcion = -1;
 
       for (let i = 0; i < array.length; i++) {
         if (array[i].key == key) {
-          console.log(array[i]["alimento"]);
-          let alimento = array[i]["alimento"];
-          if (alimento.IdGrupoAlimenticio == 1) {
-            vm.g1 += unidad - vm.auxUnidad;
-          } else if (alimento.IdGrupoAlimenticio == 2) {
-            vm.g2 += unidad - vm.auxUnidad;
-          } else if (alimento.IdGrupoAlimenticio == 3) {
-            vm.g3 += unidad - vm.auxUnidad;
-          } else if (alimento.IdGrupoAlimenticio == 4) {
-            vm.g4 += unidad - vm.auxUnidad;
-          } else if (alimento.IdGrupoAlimenticio == 5) {
-            vm.g5 += unidad - vm.auxUnidad;
-          } else if (alimento.IdGrupoAlimenticio == 6) {
-            vm.g6 += unidad - vm.auxUnidad;
-          } else if (alimento.IdGrupoAlimenticio == 7) {
-            vm.g7 += unidad - vm.auxUnidad;
+          let alimento = array[i].alimento;
+
+          if (array[i].alimento.porciones == undefined) {
+            if (pOperation == "+") {
+              array[i].alimento.porciones = porcion;
+            }
+          } else {
+            if (array[i].alimento.porciones >= 0) {
+              if (pOperation == "+") array[i].alimento.porciones += porcion;
+              else {
+                if (array[i].alimento.porciones > 0) {
+                  array[i].alimento.porciones += porcion;
+                } else {
+                  porcion = 0;
+                }
+              }
+            } else {
+              porcion = 0;
+            }
           }
+
+          console.log("Alimento =>", array[i]);
+          console.log("Porcion =>", porcion);
+
+          if (alimento.porciones > -1) {
+            if (alimento.IdGrupoAlimenticio == 1) {
+              vm.g1 += porcion;
+            } else if (alimento.IdGrupoAlimenticio == 2) {
+              vm.g2 += porcion;
+            } else if (alimento.IdGrupoAlimenticio == 3) {
+              vm.g3 += porcion;
+            } else if (alimento.IdGrupoAlimenticio == 4) {
+              vm.g4 += porcion;
+            } else if (alimento.IdGrupoAlimenticio == 5) {
+              vm.g5 += porcion;
+            } else if (alimento.IdGrupoAlimenticio == 6) {
+              vm.g6 += porcion;
+            } else if (alimento.IdGrupoAlimenticio == 7) {
+              vm.g7 += porcion;
+            }
+          }
+          break;
         }
       }
     },
-    addAlimento: function(tipo) {
+    addAlimento: function (tipo) {
       var vm = this;
       if (tipo == "desayuno") {
         let key = Math.random() * (100000 - 1) + 1;
@@ -463,7 +586,7 @@ export default {
         let key = Math.random() * (100000 - 1) + 1;
         vm.cantidadAlimentosCena.push({ key: key, alimento: {} });
       }
-    }
+    },
   },
   mounted() {
     let self = this;
@@ -486,9 +609,9 @@ export default {
 
     axios
       .get("https://calculadoranutricional.herokuapp.com/api/alimentos")
-      .then(function(res) {
+      .then(function (res) {
         self.alimentos = res.data.data;
       });
-  }
+  },
 };
 </script>
