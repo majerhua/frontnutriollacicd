@@ -120,7 +120,7 @@ export default {
   mounted() {
     let self = this;
     axios
-      .get("https://calculadoranutricional.herokuapp.com/api/sexos")
+      .get("https://backnutriollacicd.herokuapp.com/api/sexos")
       .then(function(res) {
         self.sexos = res.data;
         self.loadingSexo = false;
@@ -130,7 +130,7 @@ export default {
       });
 
     axios
-      .get("https://calculadoranutricional.herokuapp.com/api/rango-edades")
+      .get("https://backnutriollacicd.herokuapp.com/api/rango-edades")
       .then(function(res) {
         self.rangoEdades = res.data.data;
         self.loadingEdad = false;

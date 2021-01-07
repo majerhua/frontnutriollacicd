@@ -393,7 +393,7 @@ export default {
       vm.selectedRangoEdad = objEdadSexo.edad.nombre;
       axios
         .get(
-          "https://calculadoranutricional.herokuapp.com/api/consumo-estimado",
+          "https://backnutriollacicd.herokuapp.com/api/consumo-estimado",
           {
             params: {
               idSexo: sexo,
@@ -591,7 +591,7 @@ export default {
   mounted() {
     let self = this;
 
-    // axios.get("https://calculadoranutricional.herokuapp.com/api/sexos")
+    // axios.get("https://backnutriollacicd.herokuapp.com/api/sexos")
     // .then(function(res){
     //   self.sexos = res.data;
     // })
@@ -599,7 +599,7 @@ export default {
     //   alert(err);
     // })
 
-    // axios.get("https://calculadoranutricional.herokuapp.com/api/rango-edades")
+    // axios.get("https://backnutriollacicd.herokuapp.com/api/rango-edades")
     // .then(function(res){
     //   self.rangoEdades = res.data.data;
     // })
@@ -608,7 +608,7 @@ export default {
     // });
 
     axios
-      .get("https://calculadoranutricional.herokuapp.com/api/alimentos")
+      .get("https://backnutriollacicd.herokuapp.com/api/alimentos")
       .then(function (res) {
         self.alimentos = res.data.data;
       });
